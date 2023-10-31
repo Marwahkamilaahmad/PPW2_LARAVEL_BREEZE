@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Buku;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 
 class BukuController extends Controller
 {
@@ -16,7 +17,8 @@ class BukuController extends Controller
     public function index()
     {
         $banyak_buku = Buku::all()->count();
-        return view('index', ['buku' => Buku::paginate(5),'banyak_buku'=>$banyak_buku]);
+        // return view('index', ['buku' => Buku::paginate(5),'banyak_buku'=>$banyak_buku]);
+        return Inertia::render('Buku/IndexLayout', ['buku' => Buku::paginate(5),'banyak_buku'=>$banyak_buku]);
     }
 
     public function search(Request $request){
@@ -30,8 +32,9 @@ class BukuController extends Controller
 
     public function create()
     {
-        return view('create');
-        //
+        return Inertia::render('Buku/CreateLayout');
+        // return view('create');
+
     }
 
     /**
