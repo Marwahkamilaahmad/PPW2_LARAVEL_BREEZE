@@ -27,8 +27,8 @@ function Index({ user, buku }) {
                                 Dashboard
                             </NavLink>
                             <NavLink
-                                href={route("buku.create")}
-                                active={route().current("buku.create")}
+                                href={route('buku.create')}
+                                active={route().current('buku.create')}
                             >
                                 Create
                             </NavLink>

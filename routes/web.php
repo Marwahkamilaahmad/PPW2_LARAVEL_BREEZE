@@ -30,19 +30,35 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('/buku',BukuController::class);
+// Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create')->middleware('admin');
+// Route::get('/buku',[BukuController::class, 'index'])->name('buku');
+
+Route::group(['middleware'=>['auth']], function () {
+
+Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create')->middleware('admin');
+Route::get('/buku',[BukuController::class, 'index'])->name('buku');
+
+
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    Route::group(['middleware' => ['admin']], function() {
+        Route::get('/buku/{buku}', [BukuController::class, 'show'])->name('buku.show');
+        Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
+        Route::get('/buku/page', [BukuController::class, 'search'])->name('buku.search');
+        Route::get('/buku/{buku}/edit', [BukuController::class, 'edit'])->name('buku.edit');
+        Route::put('/buku/{buku}/edit', [BukuController::class, 'update'])->name('buku.update');
+        Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->name('buku.destroy');
+
+    });
+
 });
-Route::get('/buku',[BukuController::class, 'index'])->name('buku')->middleware('auth');
-Route::get('/buku/{buku}', [BukuController::class, 'show'])->name('buku.show')->middleware('auth');
-// Route::get('/buku/{buku}', [BukuController::class, 'store'])->name('buku.store')->middleware('auth');
-Route::get('/buku/page', [BukuController::class, 'search'])->name('buku.search')->middleware('auth');
-Route::get('/buku/{buku}/edit', [BukuController::class, 'edit'])->name('buku.edit')->middleware('auth');
-Route::put('/buku/{buku}/edit', [BukuController::class, 'update'])->name('buku.update')->middleware('auth');
-Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->name('buku.destroy')->middleware('auth');
+
+
+
+
 
 
 require __DIR__.'/auth.php';
